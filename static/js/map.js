@@ -38,7 +38,7 @@ function initMap() {
             .attr("stroke", "#fff")
             .attr("class", d => `country-${d.properties.admin.replace(/[^a-zA-Z0-9]/g, "_")}`)
             .on("mouseover", function(event, d) {
-                d3.select(this).attr("fill", "red");
+                d3.select(this).attr("fill", "purple");
                 let countryName = d.properties.admin;
                 if (dataCountries.has(countryName)) {
                     d3.select("#svg_map").append("text")
@@ -48,33 +48,7 @@ function initMap() {
                         .attr("y", event.pageY - mapHeight / 2 - 10)
                         .text(countryName);
                 }
-            })
-            .on("mouseout", function() {
-                let countryName = d3.select(this).datum().properties.admin;
-                if (selectedCountry !== countryName) {
-                    d3.select(this).attr("fill", dataCountries.has(countryName) ? "steelblue" : "#ccc");
-                }
-                d3.select("#hover-tooltip").remove();
-            })
-            .on("click", function(event, d) {
-                let countryName = d.properties.admin.replace(/, Arab Rep\.|Islamic Rep\./g, "").trim();
-                if (dataCountries.has(countryName)) {
-                    // Reset the previously selected country's color
-                    if (selectedCountry) {
-                        svg.select(`.country-${selectedCountry.replace(/[^a-zA-Z0-9]/g, "_")}`)
-                            .attr("fill", dataCountries.has(selectedCountry) ? "steelblue" : "#ccc");
-                    }
-                    // Highlight the newly selected country in red
-                    d3.select(this).attr("fill", "red");
-                    selectedCountry = countryName;
-
-                    console.log("Calling initScatterplot with pcaData:", pcaData, "and countryName:", countryName);
-                    initScatterplot(pcaData, countryName);
-                    let selectedIndicator = document.getElementById('indicator_change').value;
-                    console.log("Map clicked - Calling drawLinePlot with countryName:", countryName, "and selectedIndicator:", selectedIndicator);
-                    drawLinePlot(countryName, selectedIndicator);
-
-                    // Update tooltip content with the most recent year's data (up to 2020)
+                // Update tooltip content with the most recent year's data (up to 2020)
                     let tooltip = d3.select("#tooltip");
                     let countryData = data
                         .filter(d => {
@@ -111,7 +85,7 @@ function initMap() {
                         let indicatorsToShow = indicators.slice(0, 8); // Take the first 5 indicators
                         indicatorsToShow.forEach((indicator, index) => {
                             let value = mostRecentEntry[indicator];
-                            tooltipContent += `${indicator}: ${value !== undefined && !isNaN(value) ? value : "N/A"}${index < 5 ? "<br>" : ""}`;
+                            tooltipContent += `${indicator}: ${value !== undefined && !isNaN(value) ? value : "N/A"}${index < 8 ? "<br>" : ""}`;
                         });
                     } else {
                         tooltipContent += "No data available between 1960 and 2020";
@@ -119,6 +93,31 @@ function initMap() {
 
                     tooltip.html(tooltipContent)
                         .style("display", "block");
+            })
+            .on("mouseout", function() {
+                let countryName = d3.select(this).datum().properties.admin;
+                if (selectedCountry !== countryName) {
+                    d3.select(this).attr("fill", dataCountries.has(countryName) ? "steelblue" : "#ccc");
+                }
+                d3.select("#hover-tooltip").remove();
+            })
+            .on("click", function(event, d) {
+                let countryName = d.properties.admin.replace(/, Arab Rep\.|Islamic Rep\./g, "").trim();
+                if (dataCountries.has(countryName)) {
+                    // Reset the previously selected country's color
+                    if (selectedCountry) {
+                        svg.select(`.country-${selectedCountry.replace(/[^a-zA-Z0-9]/g, "_")}`)
+                            .attr("fill", dataCountries.has(selectedCountry) ? "steelblue" : "#ccc");
+                    }
+                    // Highlight the newly selected country in red
+                    d3.select(this).attr("fill", "red");
+                    selectedCountry = countryName;
+
+                    console.log("Calling initScatterplot with pcaData:", pcaData, "and countryName:", countryName);
+                    initScatterplot(pcaData, countryName);
+                    let selectedIndicator = document.getElementById('indicator_change').value;
+                    console.log("Map clicked - Calling drawLinePlot with countryName:", countryName, "and selectedIndicator:", selectedIndicator);
+                    drawLinePlot(countryName, selectedIndicator);
                 }
             });
 
