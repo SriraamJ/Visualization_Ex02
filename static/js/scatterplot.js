@@ -60,14 +60,14 @@ function initScatterplot(pcaData, selectedCountry = null) {
         .attr("r", 5)
         .attr("fill", d => {
             let normalizedName = d["Country Name"].replace(/, Arab Rep\.|Islamic Rep\./g, "").trim();
-            return normalizedName === selectedCountry ? "orange" : "steelblue";
+            return normalizedName === selectedCountry ? "red" : "steelblue";
         })
         .attr("class", d => `dot-${d["Country Name"].replace(/[^a-zA-Z0-9]/g, "_")}`)
         .on("mouseover", function(event, d) {
             let countryName = d["Country Name"].replace(/, Arab Rep\.|Islamic Rep\./g, "").trim();
             if (dataCountries.has(countryName)) {
                 d3.select(`.country-${countryName.replace(/[^a-zA-Z0-9]/g, "_")}`)
-                    .attr("fill", "orange");
+                    .attr("fill", "red");
             }
         })
         .on("mouseout", function(event, d) {

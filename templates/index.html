@@ -15,7 +15,9 @@
 <body>
 
 <h1>InfoVis UE 2025 - Exercise 2</h1>
-<p>Enter your name and Matrikelnummer</p>
+<p>Jaisankar Sriraam (12450475) Nagy Alexandru () Ramasamy Sakthi Vignesh (12450474)</p>
+
+<div id="tooltip" class="tooltip"></div>
 
 <div id="main_container" class="main_container">
     <div class="container_l">
@@ -39,7 +41,7 @@
     let data = {{ data | safe }};
     let pcaData = {{ pca_data | safe }};
     let indicators = {{ indicators | tojson }};
-    let selectedCountry = pcaData[0]["Country Name"];
+    let initialSelectedCountry = pcaData[0]["Country Name"]; // Renamed to avoid conflict
 
     let dropdown = document.getElementById('indicator_change');
     indicators.forEach(indicator => {
@@ -57,13 +59,13 @@
         initMap();
         initScatterplot(pcaData);
 
-        console.log("Initial drawLinePlot with country:", selectedCountry, "and indicator:", indicators[0]);
-        drawLinePlot(selectedCountry, indicators[0]);
+        console.log("Initial drawLinePlot with country:", initialSelectedCountry, "and indicator:", indicators[0]);
+        drawLinePlot(initialSelectedCountry, indicators[0]);
 
         dropdown.addEventListener('change', () => {
             let selectedIndicator = dropdown.value;
-            console.log("Dropdown changed - drawLinePlot with country:", selectedCountry, "and indicator:", selectedIndicator);
-            drawLinePlot(selectedCountry, selectedIndicator);
+            console.log("Dropdown changed - drawLinePlot with country:", initialSelectedCountry, "and indicator:", selectedIndicator);
+            drawLinePlot(initialSelectedCountry, selectedIndicator);
         });
     };
 </script>
